@@ -45,7 +45,7 @@ Without further ado...
 
 ---
 
-# Rough draft of RustConf 2018 talk
+# [Rough draft of RustConf 2018 talk](#rough-draft-of-rustconf-2018-talk)
 
 This is a very rough outline of the things I'd like to talk about in my RustConf
 2018 keynote.
@@ -54,7 +54,7 @@ This talk assumes that you know a bit of C++ in addition to a bit of Rust, and
 there are quite a lot of C++ code samples, but I hope they're obvious enough not
 to be distracting to the people who might not be used to C++.
 
-## Basic thesis of the talk:
+## [Basic thesis of the talk:](#basic-thesis-of-the-talk)
 
 Rust, by design, makes certain programming patterns more painful than others.
 This is a GOOD thing!  It turns out that, for game development, the patterns
@@ -68,9 +68,9 @@ semantics, and this is great news because this is a really good fit for game
 development.  I suspect this is also true generally, not just for game
 development! (but what do I know?)
 
-## Why should you listen to me, who am I?
+## [Why should you listen to me, who am I?](#why-should-you-listen-to-me-who-am-i)
 
-I was the lead programmer for Starbound, I've I was one of the first members of
+I was the lead programmer for Starbound, I was one of the first members of
 Chucklefish back when we were all working over IRC.  I was the technical lead at
 Chucklefish when we first decided that we should probably have somebody be
 called the "technical lead".  I still work with Chucklefish peripherally, but
@@ -99,7 +99,7 @@ general advice are probably never going to be so clear cut.  I definitely think
 it's still *useful*, which is why I'm doing it (and people seem interested), but
 remember: this is all just like, my opinion, man.
 
-## How do you EVEN make a game in Rust?
+## [How do you EVEN make a game in Rust?](#how-do-you-even-make-a-game-in-rust)
 
 I've gotten a lot of questions over the past year or so that more or less ask:
 
@@ -111,7 +111,7 @@ I've gotten a lot of questions over the past year or so that more or less ask:
 
 Or, maybe it's something like:
 
-> I can see how rust is great if you like very strict control, I can see it
+> I can see how Rust is great if you like very strict control, I can see it
 > being used for small utilities or things where security is paramount, but it
 > seems very restrictive!  I don't really see how you could make something large
 > like a game without running into these limitations.  How do you structure
@@ -156,7 +156,7 @@ and describe why these are especially important in the presence of the borrow
 checker, but hopefully I can also add some nuance to these and this will be
 helpful to other people who want to use Rust for game development.
 
-## How do you EVEN make a game *at all*
+## [How do you EVEN make a game *at all*](#how-do-you-even-make-a-game-at-all)
 
 Certainly a lot of these questions only appear when you're trying to come up
 with a game architecture from scratch, and certainly many people aren't going to
@@ -177,16 +177,16 @@ directly against every piece of advice you commonly give a new indie dev:
     release)
   
   * Seriously, don't make your own engine, just use Unity / Unreal / Godot etc
-    (We didn't even use boost!  In fact, at some point we added our own versions
-    of c++17 classes like std::optional and std::variant inside starbound,
-    because at the time it was easier than starting to depend on boost.  We also
+    (We didn't even use Boost!  In fact, at some point we added our own versions
+    of C++17 classes like `std::optional` and `std::variant` inside Starbound,
+    because at the time it was easier than starting to depend on Boost.  We also
     came up with our own system for doing 2d texture atlasing because we
     couldn't find a good way to do offline texture atlasing with so many small
     textures that can't be easily grouped)
 
   * Your first game should be simple, you should make something simple that you
     can release in a short time.
-    (In starbound, you can have an item that the player holds that runs its own
+    (In Starbound, you can have an item that the player holds that runs its own
     Lua script which affects player physics, which can cooperate with other
     items and abilities that the player has that have their own scripts that
     also can affect the player's physics (at the same time), while also giving
@@ -240,7 +240,7 @@ going to be using one of the opinionated game engines that decide much of the
 game structure for you like Unreal or Unity, and you've decided to use Rust,
 what would such a thing look like?
 
-## How games were made in the past
+## [How games were made in the past](#how-games-were-made-in-the-past)
 
 So, in the past, games were mostly engineered in a "data-oriented" way out of
 sheer necessity.  There is not much room for abstraction when your target
@@ -253,7 +253,7 @@ let you insert hooks into say, the VBlank handler, that overwrote actual memory
 values at constant locations every frame to say give you infinite lives etc.
 
 The reason this worked is because obviously with 128KB of RAM, you're not
-exactly going to have an implementation of malloc!.  Every byte of storage is
+exactly going to have an implementation of `malloc`!.  Every byte of storage is
 precious, so mostly games from this era are designed with very predictable
 manually managed layouts for their entire game state in memory.  In the NES /
 SNES era, there was so little memory that generally the graphical representation
@@ -521,7 +521,7 @@ need to make is that everywhere where there would have been a pointer, instead
 store an index into some array.  The canonical example of this is the
 "mario_entity" field on our GameState.  This may seem overly limiting, but with
 a bit of thought it becomes clear especially if you had constant limits on
-things (you don't even have malloc, remember!), you can always add something
+things (you don't even have `malloc`, remember!), you can always add something
 like `all_the_textures: [TextureDescriptor; 256]`, and use integer indexes into
 this static array to describe textures instead of things like pointers.  The
 other reason this is helpful w.r.t. the borrow checker is that Rust is rather
@@ -559,7 +559,7 @@ But still, I'm genuinely not advocating this.  Let's refer to this as the
 "data-driven! use an ECS!" answer from the bottom up, let's digress and approach
 this now from the top down.
 
-## Wayyyyyyy too much object orientation
+## [Wayyyyyyy too much object orientation](#wayyyyyyy-too-much-object-orientation)
 
 Now that we've covered sort of the simplest possible messy procedural C-ish game
 engine design, let's try to apply the principles of OO design and see if this is
@@ -617,7 +617,7 @@ design can fail in gamedev.
 
 So, superficially games seem well suited to OO because when trying to come up
 with OO designs, there are obvious "objects" that jump out at you.  Using
-starbound as our example, things like "Player", "NPC", "Monster" are pretty
+Starbound as our example, things like "Player", "NPC", "Monster" are pretty
 easily understood concepts and obvious candidates for objects in our game, so
 lets start with these.  We'll also include a "World" class which, like the Mario
 64 example, is the basic structure of some live play arena (we're purposefully
@@ -885,13 +885,13 @@ this is *very* unsafe, so the pattern that all game engines I've ever (in
 languages without a fancy garbage collector) seen adopt is actually to have
 some kind of map from some form of "entity id" to an actual entity pointer and
 keep that in a single location.  The reason for this is that, say in C++, let's
-say every entity keeps a shared_ptr<Entity> or some kind of downcasted
-shared_ptr.  The problem then becomes that World is now a giant ball of
+say every entity keeps a `shared_ptr<Entity>` or some kind of downcasted
+`shared_ptr`.  The problem then becomes that World is now a giant ball of
 reference-cycles and entities may never be destructed, and this is a huge
 problem.  On the other side of this, if they kept raw pointers, they would be
 continually invalidated and this tends to lead to hard to solve ephemeral bugs
 and so more or less nobody does this (least, nobody keeps raw pointers /
-references around for "very long").  You *could* use for example weak_ptr, and
+references around for "very long").  You *could* use for example `weak_ptr`, and
 this is sometimes used, but there tend to be other reasons to use ids because
 they're useful for networking and can more easily be saved and loaded from
 disk.  This is interesting, because this is the major change that we had to
@@ -1017,7 +1017,7 @@ You add a lot more accessors and special interfaces.  Things are a mess.
 
 So, these are made up examples, but they are not much different than the real
 things that I went through a *lot*.  This is why it is now considered common
-knowledge now that for games, OO *mostly* just gets in the way.  Data hiding has
+knowledge that for games, OO *mostly* just gets in the way.  Data hiding has
 very limited utility for a game outside of just maintaining invariants at the
 edges of the code, where things are smaller and more contained.  A lot, possibly
 even the vast majority of the interesting behavior in your game ends up spanning
@@ -1497,8 +1497,8 @@ have their own internal mutations (target entity).  Maybe this all was started
 from a Monster, so the control flow goes from Monster to Player and *back into*
 Monster.  If you're debugging Monster, you now have triggered *spooky action at
 a distance* by indirectly triggering mutation inside your own struct method.
-Except, rust doesn't allow this, (and this wouldn't even type check probably
-without RefCell), so in rust the version of this is that you simply get a
+Except, Rust doesn't allow this, (and this wouldn't even type check probably
+without RefCell), so in Rust the version of this is that you simply get a
 RefCell panic.
 
 Let's keep going, say entities have some kind of tag or dynamic set of tags, and
@@ -1672,7 +1672,7 @@ game is not really helped by OO.  We need some way to deal with the downsides of
 a single giant mutable public nested struct without making an OO mess.  We're
 now approaching the ECS answer from the top down.
 
-## Back to the beginning.
+## [Back to the beginning.](#back-to-the-beginning)
 
 Our "OO-architecture" was a complete bust in Rust, so let's start over with
 something we know will work, our "UR-architecture" and try to improve it.  This
@@ -2103,7 +2103,7 @@ developers:
     
 Okay, let's stop for a second and talk about `EntityIndex`.  I genuinely think
 that most of the time when you find yourself running into self borrowing with
-Rust, plain Vecs and indexes should first tool you reach for.  There are OTHER
+Rust, plain Vecs and indexes should be the first tool you reach for.  There are OTHER
 tools, like various arena crates, rental etc, but I think that generally you
 should try Vec first.  Generally these problems happen when trying to represent
 some kind of graph structure (and an ECS is just a really flat graph... kind
@@ -2130,7 +2130,7 @@ from under us!.  Also, both of these situations are now much worse after the
 and how we manage "entity indexes" is kind of up in the air now.  We're going to
 solve both of these problems at once.
 
-## Generational indexes are awesome.
+## [Generational indexes are awesome.](#generational-indexes-are-awesome)
 
 So this is one of my favorite patterns that I'm not sure is widely known in the
 Rust community but I believe is widely known in the gamedev one.
@@ -2216,7 +2216,7 @@ of simple indexes!
 
 I said this pattern is not widely known inside the Rust community, but that's at
 least a bit of a lie because there is a recently released crate built on this
-idea called "slotmap" and it's great!  However, it's missing a CRUCIAL feature
+idea called "[slotmap](https://crates.io/crates/slotmap)" and it's great!  However, it's missing a CRUCIAL feature
 for our example, which is that in "slotmap" you can only allocate indexes for a
 specific SlotMap, you can't allocate indexes and re-use them for different
 SlotMaps.  Useful, but it would be vastly MORE useful if these concepts were
@@ -2300,7 +2300,7 @@ expose the allocator separately, it's hugely useful!  If that doesn't seem in
 scope or the kind of API you want to provide, I can release a similar crate with
 the version I have that does do this.
 
-## Dynamic typing is actually kind of nice in VERY controlled quantities.
+## [Dynamic typing is actually kind of nice in VERY controlled quantities.](#dynamic-typing-is-actually-kind-of-nice-in-very-controlled-quantities)
 
 Okay, we're really close now, this is very close to how a "real" ECS system
 (like specs!) might work.  The biggest problem we haven't addressed from earlier
@@ -2318,7 +2318,9 @@ right!  This IS something that is in most ECS implementations though, so it's
 worth covering if only to understand them, and it's more or less unavoidable
 when trying to build a library to do this sort of thing.
 
-For this we're going to need the `anymap` crate, but also the `mopa` crate would
+For this we're going to need the 
+[`anymap` crate](https://crates.io/crates/anymap), but also the 
+[`mopa` crate](https://crates.io/crates/mopa) would
 do as well.  What we need is a container that can store exactly one of every
 type that we put into it:
 
@@ -2410,7 +2412,7 @@ consider a "modern" game engine design that you might use for a medium or large
 project.  It's actually not much further along than this, but the last few
 features are all related and are not as useful alone.
 
-## The "registry" pattern
+## [The "registry" pattern](#the-registry-pattern)
 
 Now that we've introduced dynamic typing, there's a design pattern that I like
 in Rust that I haven't really seen in practice yet (I'm sure it exists and I
@@ -2530,7 +2532,7 @@ only, but it's constructed by reading assets.  I actually like the idea of a
 this sort of dynamic typing with AnyMap, and the two patterns go together well
 to limit the problem of "everything depending on everything else".
 
-## ECS is SQL for games
+## [ECS is SQL for games](#ecs-is-sql-for-games)
 
 Let me pull the curtain back a bit.  What have we described so far: A way of
 declaring a special kind of key (Entity), and a series of records that go with
@@ -2605,7 +2607,7 @@ compromise and make new tools.
 This is the other reason I'm doing this talk, to help further de-mystify "ECS"
 and show how we ended up here, and to give perspective.
 
-## The one place where it all goes wrong
+## [The one place where it all goes wrong](#the-one-place-where-it-all-goes-wrong)
 
 (NOTE: I don't know if I need this section at all, I'm just hawking the OTHER
 talk I wanted to do.  Maybe this is unimportant?  This talk is already
@@ -2625,8 +2627,9 @@ Language boundaries are hard.
 So, the issues here are all... pretty hard to explain succinctly.  I'm not sure
 I can come up with small limited examples like before without getting way into
 the weeds and doubling the length of this already lengthy talk.  I wrote an
-entire crate (rlua) just to try and solve this problem, and after a ridiculous
-amount of work I can confidently say that I've *sort of* half-solved it.
+entire crate ([rlua](https://crates.io/crates/rlua)) just to try and solve this
+problem, and after a ridiculous amount of work I can confidently say that I've
+*sort of* half-solved it.
 
 I have a representation of components where you choose to read or write each
 component (they're stored in RwLocks for system concurrency).  I want Lua to be
@@ -2686,7 +2689,7 @@ not a great answer when in C++ it's still very difficult.
 
 I also mention this because I might have an answer for this soon!  The OTHER
 talk I thought about doing was describing what I believe is a novel way of
-implementing language runtimes safely in rust that have garbage collection that
+implementing language runtimes safely in Rust that have garbage collection that
 is zero cost, and comes with the ability to have a fast, mostly pain-free (or as
 much as possible) bindings experience.
 
@@ -2698,11 +2701,11 @@ to make this more painless though, and make a safe, fast Lua that feels at home
 in Rust in the same way that PUC-Rio's Lua feels at home in C.  I will talk
 about this in the future!
 
-## Summary
+## [Summary](#summary)
 
 I had multiple purposes with this talk:
 
-* To walk through the design of a medium-scale rust project for those with only
+* To walk through the design of a medium-scale Rust project for those with only
   experience in small-scale ones.
 * To show some examples of traps people might fall in that cause them to "fight
   the borrow checker", and to help make more concrete how to move past this
